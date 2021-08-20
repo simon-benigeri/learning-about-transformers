@@ -1,0 +1,17 @@
+name: annotated-transformer
+channels:
+  - pytorch
+  - anaconda
+  - conda-forge
+  - defaults
+dependencies:
+  - python>=3.7,<3.9
+  - pytorch
+  - torchtext
+  - numpy
+  - jupyterlab
+  - matplotlib
+  - spacy
+  - pyyaml
+  - seaborn
+  - pip
