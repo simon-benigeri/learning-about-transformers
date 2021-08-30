@@ -4,12 +4,12 @@ import torch.nn as nn
 from torch.autograd import Variable
 
 class PositionalEncoding(nn.Module):
-    """Implement positional encoding fuction"""
+    """Implement positional encoding function"""
     def __init__(self, d_model, dropout, max_len=5000):
         super(PositionalEncoding, self).__init__()
         self.dropout = nn.Dropout(p=dropout)
-        # Registers a buffer that should not to be considered a model parameter
-        # to the module's 'state_dict'
+        # positional encodings are not model parameters,
+        # so we registers them a buffer to the module's 'state_dict'
         self.register_buffer('positional_encodings', self._sinusoidal_positional_encoding(max_len, d_model))
 
     def _sinusoidal_positional_encoding(self, max_len, d_model):
@@ -26,4 +26,3 @@ class PositionalEncoding(nn.Module):
     def forward(self, x):
         x = x + Variable(self.positional_encodings[:, x.size(1)], requires_grad=True)
         return self.dropout(x)
-
