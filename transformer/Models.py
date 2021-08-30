@@ -6,7 +6,7 @@ from torch.autograd import Variable
 class PositionalEncoding(nn.Module):
     """Implement positional encoding function"""
     def __init__(self, d_model, dropout, max_len=5000):
-        super(PositionalEncoding, self).__init__()
+        super().__init__()
         self.dropout = nn.Dropout(p=dropout)
         # positional encodings are not model parameters,
         # so we registers them a buffer to the module's 'state_dict'
