@@ -2,6 +2,16 @@ import math
 import torch
 import torch.nn as nn
 
+class Embeddings(nn.Module):
+    """Implement word embedding module"""
+    def __init__(self, d_model, vocab):
+        super().__init__()
+        self.layer_embedding = nn.Embedding(num_embeddings=vocab, embedding_dim=d_model)
+        self.d_model = d_model
+
+    def forward(self, x):
+        return self.layer_embedding(x) * math.sqrt(self.d_model)
+
 class PositionalEncoding(nn.Module):
     """Implement positional encoding function"""
     def __init__(self, d_model, dropout, max_len=5000):
@@ -25,3 +35,5 @@ class PositionalEncoding(nn.Module):
     def forward(self, x):
         x = x + self.positional_encodings[:, :x.size(1)].detach().clone()
         return self.dropout(x)
+
+
