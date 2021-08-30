@@ -1,7 +1,6 @@
 import math
 import torch
 import torch.nn as nn
-from torch.autograd import Variable
 
 class PositionalEncoding(nn.Module):
     """Implement positional encoding function"""
@@ -24,5 +23,5 @@ class PositionalEncoding(nn.Module):
         return encodings.unsqueeze(0)
 
     def forward(self, x):
-        x = x + Variable(self.positional_encodings[:, :x.size(1)], requires_grad=True)
+        x = x + self.positional_encodings[:, :x.size(1)].detach().clone()
         return self.dropout(x)
