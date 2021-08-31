@@ -18,13 +18,10 @@ class ScaledDotProductAttention(nn.Module):
         # matmul Q, K.T and scale by dividing by temperature (usually d_k ** 0.5)
         # scores = torch.matmul(query, key.transpose(-2, -1)) / self.temperature
         scores = torch.matmul(query, key.transpose(-2, -1)) / math.sqrt(d_k)
-
         if mask is not None:
             scores = scores.masked_fill(mask == 0, -1e9)
-
         attention_filter = self.dropout(F.softmax(scores, dim=-1))
         output = torch.matmul(attention_filter, value)
-
         return attention_filter, output
 
 
