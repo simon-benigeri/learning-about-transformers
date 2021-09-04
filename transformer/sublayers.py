@@ -68,3 +68,34 @@ class MultiHeadAttention(nn.Module):
         filtered_value = filtered_value.transpose(1, 2).contiguous().view(n_batches, -1, self.n_heads * self.d_k)
         # apply final output layer. output shape: (n_batches, d_model, d_k)
         return self.linears[-1](filtered_value)
+
+
+class PositionFeedForward(nn.Module):
+    def __init__(self):
+        """implement FFN"""
+        super().__init__()
+
+    def forward(self):
+
+        return
+
+
+class LayerNorm(nn.Module):
+    def __init__(self):
+        """implement LayerNorm"""
+        super().__init__()
+
+    def forward(self):
+
+        return
+
+
+class SublayerConnection(nn.Module):
+    def __init__(self):
+        """implement SublayerConnection"""
+        super().__init__()
+
+    def forward(self):
+
+        return
+    
