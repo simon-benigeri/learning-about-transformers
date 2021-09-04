@@ -29,6 +29,7 @@ Consider an encoder-decoder structure. Encoder maps an input sequence of symbol 
 
 The Transformer Architecture
 ----------------------------\
+
 ![transformer architecture](images/transformer_architecture.png)
 
 On the left we have the encoder, on the right we have the decoder.
@@ -89,7 +90,7 @@ Dot product attention is faster, and more space efficient because it can be impl
 
 Now we look at **Multi-Head Attention**
 
-[Multi-Head Attention](images/multi_head_attention.png)
+![Multi-Head Attention](images/multi_head_attention.png)
 
 Instead of performing one attention function with dmodel dimensional keys, values, and queries, the authors linearly project the queries, keys, and values h times with different learned linear projections to dk, dk, dv dimensions respectively. Then, the attention function is performed in parallel, which yields dv dimensional output values. These are concatenated and projected once again.
 
