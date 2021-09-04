@@ -7,7 +7,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch import Tensor
 
-from utils import clones
+from transformer.utils import clones
 
 
 class ScaledDotProductAttention(nn.Module):
@@ -64,6 +64,7 @@ class MultiHeadAttention(nn.Module):
         # Apply attention on all the projected vectors in batch.
         filtered_value, attention_filter = self.attention.forward(query=query, key=key, value=value, mask=mask)
         # concatenate attention value outputs
+        # size: (n_batches, heads, d_model, d_k) -> (n_batches, d_model, n_heads * d_k)
         filtered_value = filtered_value.transpose(1, 2).contiguous().view(n_batches, -1, self.n_heads * self.d_k)
-        # apply final output layer (n_batches, d_model, d_k)
+        # apply final output layer. output shape: (n_batches, d_model, d_k)
         return self.linears[-1](filtered_value)
