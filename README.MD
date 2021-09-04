@@ -3,22 +3,28 @@
 Transformer based architectures are increasingly common in my projects. 
 In these repo I implement a transformer architecture. You'll find resources I used below:
 
-## Understanding Multi Head Attention
-The following videos are great for understanding attention.  
-[Rasa Algorithm Whiteboard - Transformers & Attention 1: Self Attention](https://www.youtube.com/watch?v=yGTUuEx3GkA)  
-[Rasa Algorithm Whiteboard - Transformers & Attention 2: Keys, Values, Queries](https://www.youtube.com/watch?v=tIvKXrEDMhk)  
-[Rasa Algorithm Whiteboard - Transformers & Attention 3: Multi Head Attention](https://www.youtube.com/watch?v=23XUv0T9L5c)  
+## Understanding LSTMs
+[Understanding LSTMs](https://colah.github.io/posts/2015-08-Understanding-LSTMs/)  
+
+## The Illustrated Transformer
+[Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/)
 
 ## The Annotated Transformer
 [The Annotated Transformer](https://nlp.seas.harvard.edu/2018/04/03/attention.html) 
 Some researchers at Harvard already did the job for me. I used this resource like you would a recipe. 
 If you want a detailed explanation of each component in a transformer, just look at this.
 
+## Understanding Multi Head Attention
+The following videos are great for understanding attention.  
+[Rasa Algorithm Whiteboard - Transformers & Attention 1: Self Attention](https://www.youtube.com/watch?v=yGTUuEx3GkA)  
+[Rasa Algorithm Whiteboard - Transformers & Attention 2: Keys, Values, Queries](https://www.youtube.com/watch?v=tIvKXrEDMhk)  
+[Rasa Algorithm Whiteboard - Transformers & Attention 3: Multi Head Attention](https://www.youtube.com/watch?v=23XUv0T9L5c)  
+
+## Understanding applications of Transformers to NLP
 [The Illustrated Bert, Elmo, and co.](https://jalammar.github.io/illustrated-bert/)  
-[Understanding LSTMs](https://colah.github.io/posts/2015-08-Understanding-LSTMs/)  
 
 ## Attention is All You Need - A paper summary I wrote a few months ago
-=========================
+Link to the paper: [Attention is All You Need](https://arxiv.org/abs/1706.03762)
 
 In RNN's we have a sequence of hidden states ht, which is a function of the previous hidden state ht-1 and the input for position t. The sequential nature of this computation prevents parallelization within training examples. And that's something we actually need when working with long sequences.
 
