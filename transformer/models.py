@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 from torch import Tensor
 
+
 class Embeddings(nn.Module):
     """Implement word embedding module"""
     def __init__(self, d_model, vocab):
@@ -12,6 +13,7 @@ class Embeddings(nn.Module):
 
     def forward(self, x: Tensor) -> Tensor:
         return self.embedding(x) * math.sqrt(self.d_model)
+
 
 class PositionalEncoding(nn.Module):
     """Implement positional encoding function"""

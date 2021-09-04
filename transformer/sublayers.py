@@ -1,3 +1,8 @@
+"""Sublayers of Encoder and Decoder layers can be found here:
+ScaledDotProductAttention,
+MultiHeadedAttention,
+LayerNorm,
+and SublayerConnection"""
 import math
 import torch
 import torch.nn as nn
@@ -12,7 +17,7 @@ class ScaledDotProductAttention(nn.Module):
         """Compute Scaled Dot Product Attention"""
         super().__init__()
         self.temperature = temperature
-        self.dropout =dropout
+        self.dropout = dropout
 
     def forward(self, query: Tensor, key: Tensor, value: Tensor, mask: Tensor=None):
         # QK.T/temperature. typically, temperature = sqrt(d_k )
