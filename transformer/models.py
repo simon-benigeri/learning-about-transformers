@@ -6,7 +6,7 @@ from torch import Tensor
 
 class Embeddings(nn.Module):
     """Implement word embedding module"""
-    def __init__(self, d_model, vocab):
+    def __init__(self, d_model: int, vocab: int):
         super().__init__()
         self.embedding = nn.Embedding(num_embeddings=vocab, embedding_dim=d_model)
         self.d_model = d_model
@@ -23,7 +23,7 @@ class PositionalEncoding(nn.Module):
         # PEs are not model parameters -> register them as a buffer to module's 'state_dict'
         self.register_buffer('positional_encodings', self._sinusoidal_positional_encoding(max_len, d_model))
 
-    def _sinusoidal_positional_encoding(self, max_len, d_model):
+    def _sinusoidal_positional_encoding(self, max_len: int, d_model: int) -> Tensor:
         """Compute the sinusoid positional encodings"""
         encodings = torch.zeros(max_len, d_model)
         positions = torch.arange(0, max_len).unsqueeze(1)

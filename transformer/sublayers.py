@@ -17,7 +17,7 @@ class ScaledDotProductAttention(nn.Module):
         self.scaling = scaling_factor
         self.dropout = dropout
 
-    def forward(self, query: Tensor, key: Tensor, value: Tensor, mask: Tensor=None):
+    def forward(self, query: Tensor, key: Tensor, value: Tensor, mask: Tensor=None) -> (Tensor, Tensor):
         # QK.T/temperature. typically, temperature = sqrt(d_k )
         scores = torch.matmul(query, key.transpose(-2, -1)) / self.scaling
         # apply optional mask
@@ -48,7 +48,7 @@ class MultiHeadAttention(nn.Module):
         self.dropout = nn.Dropout(p=dropout)
         self.attention = ScaledDotProductAttention(scaling_factor=math.sqrt(self.d_k), dropout=self.dropout)
 
-    def forward(self, query: Tensor, key: Tensor, value: Tensor, mask: Tensor=None):
+    def forward(self, query: Tensor, key: Tensor, value: Tensor, mask: Tensor=None) -> Tensor:
         # we apply same mask to all heads
         if mask is not None:
             mask = mask.unsqueeze(1)
@@ -70,14 +70,18 @@ class MultiHeadAttention(nn.Module):
         return self.linears[-1](filtered_value)
 
 
-class PositionFeedForward(nn.Module):
-    def __init__(self):
-        """implement FFN"""
+class PositionwiseFeedForward(nn.Module):
+    def __init__(self, d_model: int=512, d_ff: int=2048, dropout: float=0.1):
+        """implement Position-wise FFN(x) = max(0, xW_1 + b_1)W_2 + b_2"""
         super().__init__()
+        self.linear_1 = nn.Linear(d_model, d_ff)
+        self.linear_2 = nn.Linear(d_ff, d_model)
+        self.dropout = nn.Dropout(p=dropout)
 
-    def forward(self):
-
-        return
+    def forward(self, x: Tensor) -> Tensor:
+        x = self.linear_1(x)
+        x = self.dropout(F.relu(x))
+        return self.linear_2(x)
 
 
 class LayerNorm(nn.Module):
@@ -98,4 +102,3 @@ class SublayerConnection(nn.Module):
     def forward(self):
 
         return
-    
