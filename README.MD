@@ -1,7 +1,9 @@
 # Project Description:
 
 Transformer based architectures are increasingly common in my projects. 
-In these repo I implement a transformer architecture. You'll find resources I used below:
+In this repo I implement a transformer architecture. 
+**STATUS: IN PROGRESS**. 
+You'll find resources I used below:
 
 ## Understanding LSTMs
 [Understanding LSTMs](https://colah.github.io/posts/2015-08-Understanding-LSTMs/)  
