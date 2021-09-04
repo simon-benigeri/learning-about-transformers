@@ -17,8 +17,7 @@ If you want a detailed explanation of each component in a transformer, just look
 [The Illustrated Bert, Elmo, and co.](https://jalammar.github.io/illustrated-bert/)  
 [Understanding LSTMs](https://colah.github.io/posts/2015-08-Understanding-LSTMs/)  
 
-## My own summary of Attention is All You Need
-Attention is All You Need
+## Attention is All You Need - A paper summary I wrote a few months ago
 =========================
 
 In RNN's we have a sequence of hidden states ht, which is a function of the previous hidden state ht-1 and the input for position t. The sequential nature of this computation prevents parallelization within training examples. And that's something we actually need when working with long sequences.
@@ -27,7 +26,7 @@ Self-attention is an attention mechanism that relates different positions of a s
 
 Consider an encoder-decoder structure. Encoder maps an input sequence of symbol representations, x = (x1, x2, ..., xn), to a sequence of continuous representations, z = (z1, ..., zn). Given z, the decoder generates an output sequence y = (y1, y2, ..., yn) of symbols one element at a time. Just like we saw with other language models, at each step, the model is auto-regressive. It consumes previously generated symbols as inputs for predicting the next symbol. So for instance, we predict yt given (yt-1, yt-2, ..., y1, zn, ..., z1).
 
-The Transformer Architecture
+### The Transformer Architecture
 ----------------------------\
 
 ![transformer architecture](images/transformer_architecture.png)
