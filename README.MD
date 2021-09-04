@@ -26,7 +26,7 @@ Self-attention is an attention mechanism that relates different positions of a s
 
 Consider an encoder-decoder structure. Encoder maps an input sequence of symbol representations, x \= (x1, x2, …, xn), to a sequence of continuous representations, z = (z1, …, zn). Given z, the decoder generates an output sequence y = (y1, y2, …, yn) of symbols one element at a time. Just like we saw with other language models, at each step, the model is auto-regressive. It consumes previously generated symbols as inputs for predicting the next symbol. So for instance, we predict yt given (yt-1, yt-2, …, y1, zn, …, z1).
 
-![](images/image3.png)
+![](images/transformer_architecture.png)
 
 On the left we have the encoder, on the right we have the decoder.
 
@@ -55,7 +55,7 @@ The decoder has a stack of N = 6 layers:
 
 Attention can be described as a function to map a query and a set of key-value pairs to an output. Query, keys, values, and outputs are vectors here. The output is a weighted sum of the values, where the weight assigned to each value is computed by some compatibility function of the query with the corresponding key.
 
-In this case, we concentrate on Scaled Dot-Product Attention.![](images/image5.png)
+In this case, we concentrate on Scaled Dot-Product Attention.![](images/scaled_dot_product_attention.png)
 
 Input:
 
@@ -71,7 +71,7 @@ Two commonly used attention functions are:
 
 Dot product attention is faster, more space efficient because it can be implemented using optimized matmul code. The scaling factor here is used because additive attention performs better for large values of dk. The suspected reason for this is that as dk increases, the dot products grow large in magnitude, pushing the softmax into regions with extremely small gradients.
 
-Now we look at Multi-Head Attention![](images/image2.png)
+Now we look at Multi-Head Attention![](images/multi_head_attention.png)
 
 Instead of performing one attention function with dmodel dimensional keys, values, and queries, the authors linearly project the queries, keys, and values h times with different learned linear projections to dk, dk, dv dimensions respectively. Then, the attention function is performed in parallel, which yields dv dimensional output values. These are concatenated and projected once again.
 
@@ -110,11 +110,11 @@ Embeddings are learned, and there's not much new to say here.
 
 Positional encodings are introduced. The goal is to use a mapping that maintains the relative positions of elements in a sequence. The sine and cosine functions of different frequencies below achieve this. Learned positional encodings work too, but these functions worked.
 
-![](images/image4.png)
+![](images/positional_embeddings.png)
 
 Self attention was used with 3 considerations in mind:
 
-1.  Decreased computational complexity per layer![](images/image1.png)
+1.  Decreased computational complexity per layer![](images/table_1.png)
 2.  The amount of computation that can be parallelized (measured by minimum number of sequential operations required)
 3.  Path-length between long range dependencies in the network. Learning long-range dependences is key to sequence transduction tasks. The path length in question can be described as the length of the paths forward and backward signals have to traverse in the network to capture long-range dependencies. The shorter the paths between any combination of positions in the input and output sequences the easier it is to learn long-range dependencies.
 
