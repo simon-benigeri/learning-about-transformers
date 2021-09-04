@@ -1,7 +1,7 @@
 # Project Description:
 
 Transformer based architectures are increasingly common in my projects. 
-In this repo I implement a transformer architecture. 
+In this repo I implement a transformer architecture.  
 **STATUS: IN PROGRESS**. 
 You'll find resources I used below:
 
@@ -12,9 +12,9 @@ You'll find resources I used below:
 [Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/)
 
 ## The Annotated Transformer
-[The Annotated Transformer](https://nlp.seas.harvard.edu/2018/04/03/attention.html) 
-Some researchers at Harvard already did the job for me. I used this resource like you would a recipe. 
-If you want a detailed explanation of each component in a transformer, just look at this.
+[The Annotated Transformer](https://nlp.seas.harvard.edu/2018/04/03/attention.html)  
+Some researchers at Harvard already did the job for me. I use this resource as a recipe. 
+If you want a rigorous and detailed explanation of each component in a transformer, just look at this resource.
 
 ## Understanding Multi Head Attention
 The following videos are great for understanding attention.  
