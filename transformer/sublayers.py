@@ -35,7 +35,13 @@ class MultiHeadedAttention(nn.Module):
         # assume d_v always equals d_k
         self.d_k = d_model // n_heads
         self.heads = n_heads
-        self.linear_layers = clones(module=nn.Linear(in_features=d_model, out_features=d_model), N=4)
+        self.linear_query = nn.Linear(in_features=d_model, out_features=self.n_heads * self.d_k, bias=False)
+        self.linear_key = nn.Linear(in_features=d_model, out_features=self.n_heads * self.d_k, bias=False)
+        self.linear_value = nn.Linear(in_features=d_model, out_features=self.n_heads * self.d_k, bias=False)
+        self.linear_out = nn.Linear(in_features=d_model, out_features=self.n_heads * self.d_k, bias=False)
+        self.linears = clones(
+            module=nn.Linear(in_features=d_model, out_features=self.n_heads * self.d_k, bias=False), N=4)
+        # self.linears = clones(module=nn.Linear(in_features=d_model, out_features=self.n_heads * self.d_k, bias=False), N=4)
         self.attention = None
         self.dropout = nn.Dropout(p=dropout)
 
@@ -43,6 +49,17 @@ class MultiHeadedAttention(nn.Module):
         if mask is not None:
             # we apply same mask to all heads
             mask = mask.unsqueeze(1)
-        num_batches = query.size(0)
+        n_batches = query.size(0)
+
+        query, key, value = [
+            linear(x) for x, linear in zip((query, key, value), self.linears)
+        ]
+
+        query, key, value = [
+            linear_layer(x).view(n_batches, -1, self.heads, self.d_k).transpose(1, 2)
+             for linear_layer, x in zip(self.linears, (query, key, value))]
+
+        attention = scaled_dot_product_attention()
+        output = self.linears[-1](attention)
 
     pass

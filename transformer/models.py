@@ -34,4 +34,3 @@ class PositionalEncoding(nn.Module):
         x = x + self.positional_encodings[:, :x.size(1)].detach().clone()
         return self.dropout(x)
 
-
