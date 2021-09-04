@@ -5,7 +5,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from utils import clones
-from sublayers import MultiHeadedAttention
+from sublayers import MultiHeadAttention
 
 
 class Encoder(nn.Module):
