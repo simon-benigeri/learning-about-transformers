@@ -33,41 +33,78 @@ class ScaledDotProductAttention(nn.Module):
 
 
 class MultiHeadAttention(nn.Module):
-    def __init__(self, n_heads: int, d_model: int, dropout=0.1):
+    def __init__(self,
+                 n_heads: int,
+                 d_model: int,
+                 # d_k: int,
+                 # d_v: int,
+                 dropout=0.1):
         """input the model size and number of heads"""
         super().__init__()
         assert d_model % n_heads == 0
-        # assume d_k = d_v = d_model // n_heads
-        self.d_k = d_model // n_heads
         self.n_heads = n_heads
-        self.dropout = dropout
+        self.d_model = d_model
+        self.d_k = d_model // n_heads
+        self.d_v = d_model // n_heads
+        # assume d_k = d_v = d_model // n_heads
+        # TODO: Come back to this so that we input d_k and d_v
+        # self.d_k - d_k
+        # self.d_v = d_v
+        """
         self.linears = clones(module=nn.Linear(in_features=d_model,
                                                out_features=self.n_heads * self.d_k,
                                                bias=False),
                               N=4)
+        """
+        self.linear_query = nn.Linear(in_features=self.d_model, out_features=self.n_heads * self.d_k)
+        self.linear_key = nn.Linear(in_features=self.d_model * self.d_k, out_features=self.n_heads * self.d_k)
+        self.linear_value = nn.Linear(in_features=self.d_model * self.d_v, out_features=self.n_heads * self.d_v)
+        self.linear_out = nn.Linear(in_features=self.n_heads * self.d_v, out_features=self.d_model)
+
         self.dropout = nn.Dropout(p=dropout)
+        self.layer_norm = nn.LayerNorm(normalized_shape=self.d_model, eps=1e-6)
+
         self.attention = ScaledDotProductAttention(scaling_factor=math.sqrt(self.d_k), dropout=self.dropout)
 
     def forward(self, query: Tensor, key: Tensor, value: Tensor, mask: Tensor=None) -> Tensor:
+        assert query.size(1) == self.d_model
+        assert key.size(1) == self.d_model
+        assert value.size(1) == self.d_model
+        n_batches = query.size(0)
+        # d_model = query.size(1)
+        residual = query
         # we apply same mask to all heads
         if mask is not None:
             mask = mask.unsqueeze(1)
-        n_batches = query.size(0)
+        """
         # 1. pass query, key, value through the pre-attention linear projection layers
         # 2. separate the attention heads
-        # shape of query, key, value:
-        # (n_batches, d_model, d_model) -> (n_batches, d_model, heads, d_k) -> (n_batches, heads, d_model, d_k)
+        # (n_batches, d_model, d_model) = (n_batches, d_model, (n_heads * d_k)) -> (n_batches, d_model, heads, d_k)
+        # 3. transpose for scaled dot product attention:
+        # (n_batches, d_model, heads, d_k) -> (n_batches, heads, d_model, d_k)
         query, key, value = [
             linear(x).view(n_batches, -1, self.n_heads, self.d_k).transpose(1, 2)
             for linear, x in zip(self.linears, (query, key, value))
         ]
+        """
+        # 1. pass query, key, value through the pre-attention linear projection layers
+        # 2. separate the attention heads
+        # (n_batches, d_model, d_model) = (n_batches, d_model, (n_heads * d_k)) -> (n_batches, d_model, heads, d_k)
+        # 3. transpose for scaled dot product attention:
+        # (n_batches, d_model, heads, d_k) -> (n_batches, heads, d_model, d_k)
+        query = self.linear_query(query).view(n_batches, self.d_model, self.n_heads, self.d_k).transpose(1, 2)
+        key = self.linear_key(key).view(n_batches, self.d_model, self.n_heads, self.d_k).transpose(1, 2)
+        value = self.linear_value(value).view(n_batches, self.d_model, self.n_heads, self.d_v).transpose(1, 2)
         # Apply attention on all the projected vectors in batch.
-        filtered_value, attention_filter = self.attention.forward(query=query, key=key, value=value, mask=mask)
+        x, attention_filter = self.attention.forward(query=query, key=key, value=value, mask=mask)
         # concatenate attention value outputs
         # size: (n_batches, heads, d_model, d_k) -> (n_batches, d_model, n_heads * d_k)
-        filtered_value = filtered_value.transpose(1, 2).contiguous().view(n_batches, -1, self.n_heads * self.d_k)
+        x = x.transpose(1, 2).contiguous().view(n_batches, self.d_model, self.n_heads * self.d_k)
+        x += residual
+        x = self.layer_norm(x)
         # apply final output layer. output shape: (n_batches, d_model, d_k)
-        return self.linears[-1](filtered_value)
+        # return self.linears[-1](x)
+        return self.linear_out(x)
 
 
 class PositionwiseFeedForward(nn.Module):
