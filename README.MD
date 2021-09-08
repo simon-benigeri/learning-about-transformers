@@ -44,20 +44,20 @@ On the left we have the encoder, on the right we have the decoder.
 The encoder has a stack of N = 6 identical layers:
 
 -   each with 2 sub-layers:
-  -   Multi-head self attention mechanism
-  -   Simple, position-wise fully connected feed-forward network
+    -   Multi-head self attention mechanism
+    -   Simple, position-wise fully connected feed-forward network
 -   Each sub-layer contains a residual connection (Add) followed by layer normalization
-  -   *LayerNorm(x + Sublayer(x))*, where *Sublayer(x)* is the function implemented by the sublayer itself
+    -   *LayerNorm(x + Sublayer(x))*, where *Sublayer(x)* is the function implemented by the sublayer itself
 
 ### Decoder
 
 The decoder has a stack of *N* = 6 layers:
 -   each with 3 sub-layers:
-  -   Multi-head attention over the output of the encoder stack. We have a mask applied so as to prevent positions from attending to subsequent positions. This masking, combined with the fact that the output embeddings are offset by 1 position, ensures that predictions for position *t* can only depend on the known outputs at positions < *t*.
-  -   Multi-head self attention mechanism
-  -   Simple, position-wise full connected feed-forward network
+    -   Multi-head attention over the output of the encoder stack. We have a mask applied so as to prevent positions from attending to subsequent positions. This masking, combined with the fact that the output embeddings are offset by 1 position, ensures that predictions for position *t* can only depend on the known outputs at positions < *t*.
+    -   Multi-head self attention mechanism
+    -   Simple, position-wise full connected feed-forward network
 -   Each sub-layer contains a residual connection (Add) followed by layer normalization
-  -   *LayerNorm(x + Sublayer(x))*, where *Sublayer(x)* is the function implemented by the sublayer itself
+    -   *LayerNorm(x + Sublayer(x))*, where *Sublayer(x)* is the function implemented by the sublayer itself
 
 ### Attention, Scaled Dot Product Attention, and Multi-Head Attention
 
@@ -94,14 +94,14 @@ The projections are learned parameter matrices.
 
 Attention is used in a number of ways:
 -   In the encoder-decoder attention layers
-  -   Queries come from pervious decoder layer
-  -   Keys and values come from output of the encoder
-  -   => every position in the encoder attends over all positions in the input sequence
+    -   Queries come from pervious decoder layer
+    -   Keys and values come from output of the encoder
+    -   => every position in the encoder attends over all positions in the input sequence
 -   The encoder contains self-attention layers
-  -   Keys, values, queries come from the same place: output of previous layer in the encoder
-  -   Each position in encoder attends to all positions in previous layer of the encoder
+    -   Keys, values, queries come from the same place: output of previous layer in the encoder
+    -   Each position in encoder attends to all positions in previous layer of the encoder
 -   Self-attention layers in the decoder
-  -   Same as with encoder except that a mask is used to prevent leftward information flow
+    -   Same as with encoder except that a mask is used to prevent leftward information flow
 
 ### Why did they use self-attention?
 
@@ -118,7 +118,7 @@ Self-attention was used with 3 considerations in mind:
 ### Position-wise Feed-Forward Networks
 
 Each layer in the encoder and decoder contains such a network, which is applied to each position separately and identically. Its 2 linears transformation with ReLu activation:
--   *FFN(x) = max(0, xW<sub>1</sub> + b<sub>1</sub>)W<sub>2</sub> + b<sub>2</sub>*
+    -   *FFN(x) = max(0, xW<sub>1</sub> + b<sub>1</sub>)W<sub>2</sub> + b<sub>2</sub>*
 
 ### Embeddings
 
@@ -127,8 +127,8 @@ Word embeddings are learned, and there's not much new to say here if you're fami
 ### Positional Encodings
 
 Positional encodings are introduced. The goal is to use a mapping that maintains the relative positions of elements in a sequence. The sine and cosine functions of different frequencies below achieve this. Learned positional encodings work too, but these functions worked.
--   *PE(pos, 2i) = sin(pos/10000<sup>2i/d<sub>model</sub></sup>)*
--   *PE(pos, 2i+1) = cos(pos/10000<sup>2i/d<sub>model</sub></sup>)*
+    -   *PE(pos, 2i) = sin(pos/10000<sup>2i/d<sub>model</sub></sup>)*
+    -   *PE(pos, 2i+1) = cos(pos/10000<sup>2i/d<sub>model</sub></sup>)*
 
 ### Conclusion
 
