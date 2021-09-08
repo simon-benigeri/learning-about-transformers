@@ -2,44 +2,40 @@
 
 Transformer based architectures are increasingly common in my projects. 
 In this repo I implement a transformer architecture.  
-**STATUS: IN PROGRESS**. 
+**STATUS:**  
+Code - in progress  
+ReadME - in progress
+
+## Resources used ##
 You'll find resources I used below:
+- [Understanding LSTMs](https://colah.github.io/posts/2015-08-Understanding-LSTMs/)  
+    - provides background on LSTMs 
+- [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/)
+- [The Annotated Transformer](https://nlp.seas.harvard.edu/2018/04/03/attention.html)  
+    - Some researchers at Harvard already did the job for me. I use this resource as a recipe. 
+    - If you want a rigorous and detailed explanation of each component in a transformer, just look at this resource.
+- Understanding Multi Head Attention:
+    - The following videos are great for understanding attention.  
+        - [Rasa Algorithm Whiteboard - Transformers & Attention 1: Self Attention](https://www.youtube.com/watch?v=yGTUuEx3GkA)  
+        - [Rasa Algorithm Whiteboard - Transformers & Attention 2: Keys, Values, Queries](https://www.youtube.com/watch?v=tIvKXrEDMhk)  
+        - [Rasa Algorithm Whiteboard - Transformers & Attention 3: Multi Head Attention](https://www.youtube.com/watch?v=23XUv0T9L5c)  
+- Understanding applications of Transformers to NLP
+    - [The Illustrated Bert, Elmo, and co.](https://jalammar.github.io/illustrated-bert/)  
 
-## Understanding LSTMs
-[Understanding LSTMs](https://colah.github.io/posts/2015-08-Understanding-LSTMs/)  
+## [Attention is All You Need](https://arxiv.org/abs/1706.03762)
+Below you will find some of my notes from the paper. 
 
-## The Illustrated Transformer
-[Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/)
+### The Transformer Architecture
 
-## The Annotated Transformer
-[The Annotated Transformer](https://nlp.seas.harvard.edu/2018/04/03/attention.html)  
-Some researchers at Harvard already did the job for me. I use this resource as a recipe. 
-If you want a rigorous and detailed explanation of each component in a transformer, just look at this resource.
-
-## Understanding Multi Head Attention
-The following videos are great for understanding attention.  
-[Rasa Algorithm Whiteboard - Transformers & Attention 1: Self Attention](https://www.youtube.com/watch?v=yGTUuEx3GkA)  
-[Rasa Algorithm Whiteboard - Transformers & Attention 2: Keys, Values, Queries](https://www.youtube.com/watch?v=tIvKXrEDMhk)  
-[Rasa Algorithm Whiteboard - Transformers & Attention 3: Multi Head Attention](https://www.youtube.com/watch?v=23XUv0T9L5c)  
-
-## Understanding applications of Transformers to NLP
-[The Illustrated Bert, Elmo, and co.](https://jalammar.github.io/illustrated-bert/)  
-
-## Attention is All You Need - A paper summary I wrote a few months ago
-Link to the paper: [Attention is All You Need](https://arxiv.org/abs/1706.03762)
-
-In RNN's we have a sequence of hidden states **h<sub>t</sub>**, which is a function of the previous hidden state **h<sub>t-1</sub>** and the input for position **t**. The sequential nature of this computation prevents parallelization within training examples. And that's something we actually need when working with long sequences.
+In RNN's we have a sequence of hidden states *h<sub>t</sub>*, which is a function of the previous hidden state *h<sub>t-1</sub>* and the input for position *t*. The sequential nature of this computation prevents parallelization within training examples. And that's something we actually need when working with long sequences.
 
 Self-attention is an attention mechanism that relates different positions of a single sequence in order to compute a representation of the sequence. The Transformer architecture proposed in this paper is the first  to rely entirely on self-attention.
 
 Consider an encoder-decoder structure. 
 
-The encoder maps an input sequence of symbol representations, **x** = (x<sub>1</sub>, x<sub>2</sub>, ..., x<sub>n</sub>), to a sequence of continuous representations, **z** = (z<sub>1</sub>, ..., z<sub>n</sub>). Given **z**, the decoder generates an output sequence **y** = (y<sub>1</sub>, y<sub>2</sub>, ..., y<sub>n</sub>) of symbols one element at a time. At each timestep, the model is auto-regressive: it consumes previously generated symbols as inputs for predicting the next symbol. So for instance, we predict **y<sub>t</sub>** given (y<sub>t-1</sub>, y<sub>t-2</sub>, ..., y<sub>1</sub>, z<sub>n</sub>, ..., z<sub>1</sub>).
+The encoder maps an input sequence of symbol representations, *x = (x<sub>1</sub>, x<sub>2</sub>, ..., x<sub>n</sub>)*, to a sequence of continuous representations, *z = (z<sub>1</sub>, ..., z<sub>n</sub>)*. Given *z*, the decoder generates an output sequence *y = (y<sub>1</sub>, y<sub>2</sub>, ..., y<sub>n</sub>)* of symbols one element at a time. At each timestep, the model is auto-regressive: it consumes previously generated symbols as inputs for predicting the next symbol. So for instance, we predict *y<sub>t</sub>* given *(y<sub>t-1</sub>, y<sub>t-2</sub>, ..., y<sub>1</sub>, z<sub>n</sub>, ..., z<sub>1</sub>)*.
 
-
-### The Transformer Architecture
-
-    ![transformer architecture](images/transformer_architecture.png)
+![transformer architecture](images/transformer_architecture.png)
 
 On the left we have the encoder, on the right we have the decoder.
 
@@ -51,7 +47,7 @@ The encoder has a stack of N = 6 identical layers:
   -   Multi-head self attention mechanism
   -   Simple, position-wise fully connected feed-forward network
 -   Each sub-layer contains a residual connection (Add) followed by layer normalization
-  -   LayerNorm(x + Sublayer(x)), where Sublayer(x) is the function implemented by the sublayer itself
+  -   *LayerNorm(x + Sublayer(x))*, where *Sublayer(x)* is the function implemented by the sublayer itself
 
 ### Decoder
 
@@ -61,7 +57,7 @@ The decoder has a stack of *N* = 6 layers:
   -   Multi-head self attention mechanism
   -   Simple, position-wise full connected feed-forward network
 -   Each sub-layer contains a residual connection (Add) followed by layer normalization
-  -   LayerNorm(x + Sublayer(x)), where Sublayer(x) is the function implemented by the sublayer itself
+  -   *LayerNorm(x + Sublayer(x))*, where *Sublayer(x)* is the function implemented by the sublayer itself
 
 ### Attention, Scaled Dot Product Attention, and Multi-Head Attention
 
@@ -69,15 +65,13 @@ Attention can be described as a function to map a query and a set of key-value p
 
 In this case, we concentrate on **Scaled Dot-Product Attention**.
 
-    ![Scaled Dot-Product Attention](images/scaled_dot_product_attention.png)
+![Scaled Dot-Product Attention](images/scaled_dot_product_attention.png)
 
 Input:
-
 -   queries *Q*, keys *K*, of dimension *d<sub>k</sub>*
-
 -   values *V*, of dimension *d<sub>v</sub>*
 
-Attention(Q, K, V) = softmax(QK<sup>T</sup>/sqrt(d<sub>k</sub>))*V
+*Attention(Q, K, V) = softmax(QK<sup>T</sup>/sqrt(d<sub>k</sub>))*V*
 
 Two commonly used attention functions are:
 -   Dot product attention (this but without the scaling factor)
@@ -87,14 +81,14 @@ Dot product attention is faster, and more space efficient because it can be impl
 
 Now we look at **Multi-Head Attention**
 
-    ![Multi-Head Attention](images/multi_head_attention.png)
+![Multi-Head Attention](images/multi_head_attention.png)
 
 Instead of performing one attention function with dmodel dimensional keys, values, and queries, the authors linearly project the queries, keys, and values *h* times with different learned linear projections to *d<sub>k</sub>*, *d<sub>k</sub>*, *d<sub>v</sub>* dimensions respectively. Then, the attention function is performed in parallel, which yields *d<sub>v</sub>* dimensional output values. These are concatenated and projected once again.
 
 The reason we use multi-head attention is that it allows the model to jointly attend to information from different representation subspaces at different positions. A single head would inhibit this.
 
-MultiHead(Q, K, V) = Concat(head<sub>1</sub>, head<sub>2</sub>, ..., head<sub>h</sub>)W<sup>O</sup>, 
-where head<sub>i</sub> = Attention(QW<sub>i</sub><sup>Q</sup>, KW<sub>i</sub><sup>K</sup>, VW<sub>i</sub><sup>V</sup>)
+*MultiHead(Q, K, V) = Concat(head<sub>1</sub>, head<sub>2</sub>, ..., head<sub>h</sub>)W<sup>O</sup>*, 
+where *head<sub>i</sub> = Attention(QW<sub>i</sub><sup>Q</sup>, KW<sub>i</sub><sup>K</sup>, VW<sub>i</sub><sup>V</sup>)*
 
 The projections are learned parameter matrices.
 
@@ -124,7 +118,7 @@ Self-attention was used with 3 considerations in mind:
 ### Position-wise Feed-Forward Networks
 
 Each layer in the encoder and decoder contains such a network, which is applied to each position separately and identically. Its 2 linears transformation with ReLu activation:
--   FFN(x) = max(0, xW<sub>1</sub> + b<sub>1</sub>)W<sub>2</sub> + b<sub>2</sub>
+-   *FFN(x) = max(0, xW<sub>1</sub> + b<sub>1</sub>)W<sub>2</sub> + b<sub>2</sub>*
 
 ### Embeddings
 
@@ -132,9 +126,9 @@ Word embeddings are learned, and there's not much new to say here if you're fami
 
 ### Positional Encodings
 
-Positional encodings are introduced. The goal is to use a mapping that maintains the relative positions of elements in a sequence. The sine and cosine functions of different frequencies below achieve this. Learned positional encodings work too, but these functions worked.\
-
-![Positional Encodings](images/positional_encodings.png)
+Positional encodings are introduced. The goal is to use a mapping that maintains the relative positions of elements in a sequence. The sine and cosine functions of different frequencies below achieve this. Learned positional encodings work too, but these functions worked.
+-   *PE(pos, 2i) = sin(pos/10000<sup>2i/d<sub>model</sub></sup>)*
+-   *PE(pos, 2i+1) = cos(pos/10000<sup>2i/d<sub>model</sub></sup>)*
 
 ### Conclusion
 
