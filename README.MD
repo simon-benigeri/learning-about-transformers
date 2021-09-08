@@ -28,11 +28,13 @@ The following videos are great for understanding attention.
 ## Attention is All You Need - A paper summary I wrote a few months ago
 Link to the paper: [Attention is All You Need](https://arxiv.org/abs/1706.03762)
 
-In RNN's we have a sequence of hidden states ht, which is a function of the previous hidden state ht-1 and the input for position t. The sequential nature of this computation prevents parallelization within training examples. And that's something we actually need when working with long sequences.
+In RNN's we have a sequence of hidden states **h<sub>t</sub>**, which is a function of the previous hidden state **h<sub>t-1</sub>** and the input for position **t**. The sequential nature of this computation prevents parallelization within training examples. And that's something we actually need when working with long sequences.
 
 Self-attention is an attention mechanism that relates different positions of a single sequence in order to compute a representation of the sequence. The Transformer architecture proposed in this paper is the first  to rely entirely on self-attention.
 
-Consider an encoder-decoder structure. Encoder maps an input sequence of symbol representations, x = (x<sub>1</sub>, x<sub>2</sub>, ..., x<sub>n</sub>), to a sequence of continuous representations, z = (z<sub>1</sub>, ..., z<sub>n</sub>). Given z, the decoder generates an output sequence y = (y<sub>1</sub>, y<sub>2</sub>, ..., y<sub>n</sub>) of symbols one element at a time. Just like we saw with other language models, at each step, the model is auto-regressive. It consumes previously generated symbols as inputs for predicting the next symbol. So for instance, we predict y<sub>t</sub> given (y<sub>t-1</sub>, y<sub>t-2</sub>, ..., y<sub>1</sub>, z<sub>n</sub>, ..., z<sub>1</sub>).
+Consider an encoder-decoder structure. 
+
+The encoder maps an input sequence of symbol representations, **x** = (x<sub>1</sub>, x<sub>2</sub>, ..., x<sub>n</sub>), to a sequence of continuous representations, **z** = (z<sub>1</sub>, ..., z<sub>n</sub>). Given **z**, the decoder generates an output sequence **y** = (y<sub>1</sub>, y<sub>2</sub>, ..., y<sub>n</sub>) of symbols one element at a time. At each timestep, the model is auto-regressive: it consumes previously generated symbols as inputs for predicting the next symbol. So for instance, we predict **y<sub>t</sub>** given (y<sub>t-1</sub>, y<sub>t-2</sub>, ..., y<sub>1</sub>, z<sub>n</sub>, ..., z<sub>1</sub>).
 
 
 ### The Transformer Architecture
@@ -47,29 +49,20 @@ On the left we have the encoder, on the right we have the decoder.
 The encoder has a stack of N = 6 identical layers:
 
 -   each with 2 sub-layers:
-
--   Multi-head self attention mechanism
-
--   Simple, position-wise fully connected feed-forward network
-
+  -   Multi-head self attention mechanism
+  -   Simple, position-wise fully connected feed-forward network
 -   Each sub-layer contains a residual connection (Add) followed by layer normalization
-
--   LayerNorm(x + Sublayer(x)), where Sublayer(x) is the function implemented by the sublayer itself
+  -   LayerNorm(x + Sublayer(x)), where Sublayer(x) is the function implemented by the sublayer itself
 
 ### Decoder
 
-The decoder has a stack of N = 6 layers:
-
+The decoder has a stack of *N* = 6 layers:
 -   each with 3 sub-layers:
-  -   Multi-head attention over the output of the encoder stack. We have a mask applied so as to prevent positions from attending to subsequent positions. This masking, combined with the fact that the output embeddings are offset by 1 position, ensures that predictions for position t can only depend on the known outputs at positions < t.
-
--   Multi-head self attention mechanism
-
--   Simple, position-wise full connected feed-forward network
-
+  -   Multi-head attention over the output of the encoder stack. We have a mask applied so as to prevent positions from attending to subsequent positions. This masking, combined with the fact that the output embeddings are offset by 1 position, ensures that predictions for position *t* can only depend on the known outputs at positions < *t*.
+  -   Multi-head self attention mechanism
+  -   Simple, position-wise full connected feed-forward network
 -   Each sub-layer contains a residual connection (Add) followed by layer normalization
-
--   LayerNorm(x + Sublayer(x)), where Sublayer(x) is the function implemented by the sublayer itself
+  -   LayerNorm(x + Sublayer(x)), where Sublayer(x) is the function implemented by the sublayer itself
 
 ### Attention, Scaled Dot Product Attention, and Multi-Head Attention
 
@@ -81,72 +74,62 @@ In this case, we concentrate on **Scaled Dot-Product Attention**.
 
 Input:
 
--   queries Q, keys K, of dimension dk
+-   queries *Q*, keys *K*, of dimension *d<sub>k</sub>*
 
--   values V, of dimension dv
+-   values *V*, of dimension *d<sub>v</sub>*
 
 Attention(Q, K, V) = softmax(QK<sup>T</sup>/sqrt(d<sub>k</sub>))*V
 
 Two commonly used attention functions are:
-
 -   Dot product attention (this but without the scaling factor)
+-   Additive attention (compute compatibility using feed-forward neural network with single hidden layer)
 
--   Additive attention (compute compatibility using feed-forward nn with single hidden layer)
-
-Dot product attention is faster, and more space efficient because it can be implemented using optimized matrix multiplication code. The scaling factor here is used because additive attention performs better for large values of dk. The suspected reason for this is that as dk increases, the dot products grow large in magnitude, pushing the softmax into regions with extremely small gradients.
+Dot product attention is faster, and more space efficient because it can be implemented using optimized matrix multiplication code. The scaling factor here is used because additive attention performs better for large values of *d<sub>k</sub>*. The suspected reason for this is that as *d<sub>k</sub>* increases, the dot products grow large in magnitude, pushing the softmax into regions with extremely small gradients.
 
 Now we look at **Multi-Head Attention**
 
 ![Multi-Head Attention](images/multi_head_attention.png)
 
-Instead of performing one attention function with dmodel dimensional keys, values, and queries, the authors linearly project the queries, keys, and values h times with different learned linear projections to dk, dk, dv dimensions respectively. Then, the attention function is performed in parallel, which yields dv dimensional output values. These are concatenated and projected once again.
+Instead of performing one attention function with dmodel dimensional keys, values, and queries, the authors linearly project the queries, keys, and values *h* times with different learned linear projections to *d<sub>k</sub>*, *d<sub>k</sub>*, *d<sub>v</sub>* dimensions respectively. Then, the attention function is performed in parallel, which yields *d<sub>v</sub>* dimensional output values. These are concatenated and projected once again.
 
 The reason we use multi-head attention is that it allows the model to jointly attend to information from different representation subspaces at different positions. A single head would inhibit this.
 
-MultiHead(Q, K, V) = Concat(head<sub>1</sub>, head<sub>2</sub>, ..., head<sub>h</sub>)W<sup>O</sup>, 
-
-where headi = Attention(QW<sub>i</sub><sup>Q</sup>, KW<sub>i</sub><sup>k</sup>, VW<sub>i</sub><sup>V</sup>)
+MultiHead(Q, K, V) = Concat(head<sub>1</sub>, head<sub>2</sub>, ..., head<sub>h</sub>)W<sup>O</sup>, 
+where head<sub>i</sub> = Attention(QW<sub>i</sub><sup>Q</sup>, KW<sub>i</sub><sup>K</sup>, VW<sub>i</sub><sup>V</sup>)
 
 The projections are learned parameter matrices.
 
 Attention is used in a number of ways:
-
 -   In the encoder-decoder attention layers
-
--   Queries come from pervious decoder layer
-
--   Keys and values come from output of the encoder
+  -   Queries come from pervious decoder layer
+  -   Keys and values come from output of the encoder
   -   => every position in the encoder attends over all positions in the input sequence
-
 -   The encoder contains self-attention layers
-
--   Keys, values, queries come from the same place: output of previous layer in the encoder
-
--   Each position in encoder attends to all positions in previous layer of the encoder
-
+  -   Keys, values, queries come from the same place: output of previous layer in the encoder
+  -   Each position in encoder attends to all positions in previous layer of the encoder
 -   Self-attention layers in the decoder
   -   Same as with encoder except that a mask is used to prevent leftward information flow
 
-### Why did they use self attention?
+### Why did they use self-attention?
 
-Self attention was used with 3 considerations in mind:
+Self-attention was used with 3 considerations in mind:
 
-1.  Decreased computational complexity per layer
+1.  Decreasing the computational complexity per layer:  
 ![table_1](images/table_1.png)
 
 2.  The amount of computation that can be parallelized (measured by minimum number of sequential operations required)
 
-3.  Path-length between long range dependencies in the network. Learning long-range dependences is key to sequence transduction tasks. The path length in question can be described as the length of the paths forward and backward signals have to traverse in the network to capture long-range dependencies. The shorter the paths between any combination of positions in the input and output sequences the easier it is to learn long-range dependencies.
+3.  Path-length between long range dependencies in the network. 
+  - Learning long-range dependences is key to sequence transduction tasks. The path length in question can be described as the length of the paths forward and backward signals have to traverse in the network to capture long-range dependencies. The shorter the paths between any combination of positions in the input and output sequences the easier it is to learn long-range dependencies.
 
 ### Position-wise Feed-Forward Networks
 
 Each layer in the encoder and decoder contains such a network, which is applied to each position separately and identically. Its 2 linears transformation with ReLu activation:
-
 -   FFN(x) = max(0, xW<sub>1</sub> + b<sub>1</sub>)W<sub>2</sub> + b<sub>2</sub>
 
 ### Embeddings
 
-Word embeddings are learned, and there's not much new to say here.
+Word embeddings are learned, and there's not much new to say here if you're familiar with Language Modelling, word embeddings, etc.
 
 ### Positional Encodings
 
