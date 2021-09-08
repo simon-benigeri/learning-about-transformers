@@ -50,12 +50,6 @@ class MultiHeadAttention(nn.Module):
         # TODO: Come back to this so that we input d_k and d_v
         # self.d_k - d_k
         # self.d_v = d_v
-        """
-        self.linears = clones(module=nn.Linear(in_features=d_model,
-                                               out_features=self.n_heads * self.d_k,
-                                               bias=False),
-                              N=4)
-        """
         self.linear_query = nn.Linear(in_features=self.d_model, out_features=self.n_heads * self.d_k)
         self.linear_key = nn.Linear(in_features=self.d_model * self.d_k, out_features=self.n_heads * self.d_k)
         self.linear_value = nn.Linear(in_features=self.d_model * self.d_v, out_features=self.n_heads * self.d_v)
@@ -76,17 +70,6 @@ class MultiHeadAttention(nn.Module):
         # we apply same mask to all heads
         if mask is not None:
             mask = mask.unsqueeze(1)
-        """
-        # 1. pass query, key, value through the pre-attention linear projection layers
-        # 2. separate the attention heads
-        # (n_batches, d_model, d_model) = (n_batches, d_model, (n_heads * d_k)) -> (n_batches, d_model, heads, d_k)
-        # 3. transpose for scaled dot product attention:
-        # (n_batches, d_model, heads, d_k) -> (n_batches, heads, d_model, d_k)
-        query, key, value = [
-            linear(x).view(n_batches, -1, self.n_heads, self.d_k).transpose(1, 2)
-            for linear, x in zip(self.linears, (query, key, value))
-        ]
-        """
         # 1. pass query, key, value through the pre-attention linear projection layers
         # 2. separate the attention heads
         # (n_batches, d_model, d_model) = (n_batches, d_model, (n_heads * d_k)) -> (n_batches, d_model, heads, d_k)
@@ -103,7 +86,6 @@ class MultiHeadAttention(nn.Module):
         x += residual
         x = self.layer_norm(x)
         # apply final output layer. output shape: (n_batches, d_model, d_k)
-        # return self.linears[-1](x)
         return self.linear_out(x)
 
 
@@ -111,8 +93,8 @@ class PositionwiseFeedForward(nn.Module):
     def __init__(self, d_model: int=512, d_ff: int=2048, dropout: float=0.1):
         """implement Position-wise FFN(x) = max(0, xW_1 + b_1)W_2 + b_2"""
         super().__init__()
-        self.linear_1 = nn.Linear(d_model, d_ff)
-        self.linear_2 = nn.Linear(d_ff, d_model)
+        self.linear_1 = nn.Linear(in_features=d_model, out_features=d_ff)
+        self.linear_2 = nn.Linear(in_features=d_ff, out_features=d_model)
         self.dropout = nn.Dropout(p=dropout)
 
     def forward(self, x: Tensor) -> Tensor:
