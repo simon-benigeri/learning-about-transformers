@@ -38,7 +38,6 @@ The encoder maps an input sequence of symbol representations, **x** = (x<sub>1</
 
 
 ### The Transformer Architecture
-----------------------------\
 
 ![transformer architecture](images/transformer_architecture.png)
 
