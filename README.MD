@@ -32,7 +32,7 @@ In RNN's we have a sequence of hidden states ht, which is a function of the prev
 
 Self-attention is an attention mechanism that relates different positions of a single sequence in order to compute a representation of the sequence. The Transformer architecture proposed in this paper is the first  to rely entirely on self-attention.
 
-Consider an encoder-decoder structure. Encoder maps an input sequence of symbol representations, x = (x1, x2, ..., xn), to a sequence of continuous representations, z = (z1, ..., zn). Given z, the decoder generates an output sequence y = (y1, y2, ..., yn) of symbols one element at a time. Just like we saw with other language models, at each step, the model is auto-regressive. It consumes previously generated symbols as inputs for predicting the next symbol. So for instance, we predict yt given (yt-1, yt-2, ..., y1, zn, ..., z1).
+Consider an encoder-decoder structure. Encoder maps an input sequence of symbol representations, x = (x<sub>1</sub>, x<sub>2</sub>, ..., x<sub>n</sub>), to a sequence of continuous representations, z = (z<sub>1</sub>, ..., z<sub>n</sub>). Given z, the decoder generates an output sequence y = (y<sub>1</sub>, y<sub>2</sub>, ..., y<sub>n</sub>) of symbols one element at a time. Just like we saw with other language models, at each step, the model is auto-regressive. It consumes previously generated symbols as inputs for predicting the next symbol. So for instance, we predict y<sub>t<sub> given (y<sub>t-1</sub>, y<sub>t-2</sub>, ..., y<sub>1</sub>, z<sub>n</sub>, ..., z<sub>1</sub>).
 
 ### The Transformer Architecture
 ----------------------------\
@@ -60,8 +60,7 @@ The encoder has a stack of N = 6 identical layers:
 The decoder has a stack of N = 6 layers:
 
 -   each with 3 sub-layers:
-
--   Multi-head attention over the output of the encoder stack. We have a mask applied so as to prevent positions from attending to subsequent positions. This masking, combined with the fact that the output embeddings are offset by 1 position, ensures that predictions for position t can only depend on the known outputs at positions < t.
+  -   Multi-head attention over the output of the encoder stack. We have a mask applied so as to prevent positions from attending to subsequent positions. This masking, combined with the fact that the output embeddings are offset by 1 position, ensures that predictions for position t can only depend on the known outputs at positions < t.
 
 -   Multi-head self attention mechanism
 
@@ -103,7 +102,7 @@ Instead of performing one attention function with dmodel dimensional keys, value
 
 The reason we use multi-head attention is that it allows the model to jointly attend to information from different representation subspaces at different positions. A single head would inhibit this.
 
-MultiHead(Q, K, V) = Concat(head1, head2, ..., headh)WO, 
+MultiHead(Q, K, V) = Concat(head<sub>1</sub>, head<sub>2</sub>, ..., head<sub>h</sub>)W<sup>O</sup>, 
 
 where headi = Attention(QWiQ, KWiK, VWiV)
 
@@ -116,8 +115,7 @@ Attention is used in a number of ways:
 -   Queries come from pervious decoder layer
 
 -   Keys and values come from output of the encoder
-
--   => every position in the encoder attends over all positions in the input sequence
+  -   => every position in the encoder attends over all positions in the input sequence
 
 -   The encoder contains self-attention layers
 
@@ -126,8 +124,7 @@ Attention is used in a number of ways:
 -   Each position in encoder attends to all positions in previous layer of the encoder
 
 -   Self-attention layers in the decoder
-
--   Same as with encoder except that a mask is used to prevent leftward information flow
+  -   Same as with encoder except that a mask is used to prevent leftward information flow
 
 ### Why did they use self attention?
 
