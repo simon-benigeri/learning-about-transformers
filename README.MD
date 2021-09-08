@@ -39,7 +39,7 @@ The encoder maps an input sequence of symbol representations, **x** = (x<sub>1</
 
 ### The Transformer Architecture
 
-![transformer architecture](images/transformer_architecture.png)
+    ![transformer architecture](images/transformer_architecture.png)
 
 On the left we have the encoder, on the right we have the decoder.
 
@@ -69,7 +69,7 @@ Attention can be described as a function to map a query and a set of key-value p
 
 In this case, we concentrate on **Scaled Dot-Product Attention**.
 
-![Scaled Dot-Product Attention](images/scaled_dot_product_attention.png)
+    ![Scaled Dot-Product Attention](images/scaled_dot_product_attention.png)
 
 Input:
 
@@ -87,7 +87,7 @@ Dot product attention is faster, and more space efficient because it can be impl
 
 Now we look at **Multi-Head Attention**
 
-![Multi-Head Attention](images/multi_head_attention.png)
+    ![Multi-Head Attention](images/multi_head_attention.png)
 
 Instead of performing one attention function with dmodel dimensional keys, values, and queries, the authors linearly project the queries, keys, and values *h* times with different learned linear projections to *d<sub>k</sub>*, *d<sub>k</sub>*, *d<sub>v</sub>* dimensions respectively. Then, the attention function is performed in parallel, which yields *d<sub>v</sub>* dimensional output values. These are concatenated and projected once again.
 
@@ -114,12 +114,12 @@ Attention is used in a number of ways:
 Self-attention was used with 3 considerations in mind:
 
 1.  Decreasing the computational complexity per layer:  
-![table_1](images/table_1.png)
+    ![table_1](images/table_1.png)
 
 2.  The amount of computation that can be parallelized (measured by minimum number of sequential operations required)
 
 3.  Path-length between long range dependencies in the network. 
-  - Learning long-range dependences is key to sequence transduction tasks. The path length in question can be described as the length of the paths forward and backward signals have to traverse in the network to capture long-range dependencies. The shorter the paths between any combination of positions in the input and output sequences the easier it is to learn long-range dependencies.
+    - Learning long-range dependences is key to sequence transduction tasks. The path length in question can be described as the length of the paths forward and backward signals have to traverse in the network to capture long-range dependencies. The shorter the paths between any combination of positions in the input and output sequences the easier it is to learn long-range dependencies.
 
 ### Position-wise Feed-Forward Networks
 
