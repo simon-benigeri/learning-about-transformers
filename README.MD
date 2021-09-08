@@ -32,7 +32,8 @@ In RNN's we have a sequence of hidden states ht, which is a function of the prev
 
 Self-attention is an attention mechanism that relates different positions of a single sequence in order to compute a representation of the sequence. The Transformer architecture proposed in this paper is the first  to rely entirely on self-attention.
 
-Consider an encoder-decoder structure. Encoder maps an input sequence of symbol representations, x = (x<sub>1</sub>, x<sub>2</sub>, ..., x<sub>n</sub>), to a sequence of continuous representations, z = (z<sub>1</sub>, ..., z<sub>n</sub>). Given z, the decoder generates an output sequence y = (y<sub>1</sub>, y<sub>2</sub>, ..., y<sub>n</sub>) of symbols one element at a time. Just like we saw with other language models, at each step, the model is auto-regressive. It consumes previously generated symbols as inputs for predicting the next symbol. So for instance, we predict y<sub>t<sub> given (y<sub>t-1</sub>, y<sub>t-2</sub>, ..., y<sub>1</sub>, z<sub>n</sub>, ..., z<sub>1</sub>).
+Consider an encoder-decoder structure. Encoder maps an input sequence of symbol representations, x = (x<sub>1</sub>, x<sub>2</sub>, ..., x<sub>n</sub>), to a sequence of continuous representations, z = (z<sub>1</sub>, ..., z<sub>n</sub>). Given z, the decoder generates an output sequence y = (y<sub>1</sub>, y<sub>2</sub>, ..., y<sub>n</sub>) of symbols one element at a time. Just like we saw with other language models, at each step, the model is auto-regressive. It consumes previously generated symbols as inputs for predicting the next symbol. So for instance, we predict y<sub>t</sub> given (y<sub>t-1</sub>, y<sub>t-2</sub>, ..., y<sub>1</sub>, z<sub>n</sub>, ..., z<sub>1</sub>).
+
 
 ### The Transformer Architecture
 ----------------------------\
