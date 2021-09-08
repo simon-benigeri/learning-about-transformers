@@ -71,7 +71,7 @@ Input:
 -   queries *Q*, keys *K*, of dimension *d<sub>k</sub>*
 -   values *V*, of dimension *d<sub>v</sub>*
 
-*Attention(Q, K, V) = softmax(QK<sup>T</sup>/sqrt(d<sub>k</sub>))*V*
+*Attention(Q, K, V) = softmax(QK<sup>T</sup>/sqrt(d<sub>k</sub>))V*
 
 Two commonly used attention functions are:
 -   Dot product attention (this but without the scaling factor)
@@ -117,8 +117,8 @@ Self-attention was used with 3 considerations in mind:
 
 ### Position-wise Feed-Forward Networks
 
-Each layer in the encoder and decoder contains such a network, which is applied to each position separately and identically. Its 2 linears transformation with ReLu activation:
-    -   *FFN(x) = max(0, xW<sub>1</sub> + b<sub>1</sub>)W<sub>2</sub> + b<sub>2</sub>*
+Each layer in the encoder and decoder contains such a network, which is applied to each position separately and identically. Its 2 linears transformation with ReLu activation:  
+-   *FFN(x) = max(0, xW<sub>1</sub> + b<sub>1</sub>)W<sub>2</sub> + b<sub>2</sub>*
 
 ### Embeddings
 
@@ -126,9 +126,9 @@ Word embeddings are learned, and there's not much new to say here if you're fami
 
 ### Positional Encodings
 
-Positional encodings are introduced. The goal is to use a mapping that maintains the relative positions of elements in a sequence. The sine and cosine functions of different frequencies below achieve this. Learned positional encodings work too, but these functions worked.
-    -   *PE(pos, 2i) = sin(pos/10000<sup>2i/d<sub>model</sub></sup>)*
-    -   *PE(pos, 2i+1) = cos(pos/10000<sup>2i/d<sub>model</sub></sup>)*
+Positional encodings are introduced. The goal is to use a mapping that maintains the relative positions of elements in a sequence. The sine and cosine functions of different frequencies below achieve this. Learned positional encodings work too, but these functions worked.  
+-   *PE(pos, 2i) = sin(pos/10000<sup>2i/d<sub>model</sub></sup>)*
+-   *PE(pos, 2i+1) = cos(pos/10000<sup>2i/d<sub>model</sub></sup>)*
 
 ### Conclusion
 
