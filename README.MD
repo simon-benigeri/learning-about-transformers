@@ -85,7 +85,7 @@ Input:
 
 -   values V, of dimension dv
 
-Attention(Q, K, V) = softmax(QKT/sqrt(dk))*V
+Attention(Q, K, V) = softmax(QK<sup>T</sup>/sqrt(d<sub>k</sub>))*V
 
 Two commonly used attention functions are:
 
@@ -105,7 +105,7 @@ The reason we use multi-head attention is that it allows the model to jointly at
 
 MultiHead(Q, K, V) = Concat(head<sub>1</sub>, head<sub>2</sub>, ..., head<sub>h</sub>)W<sup>O</sup>, 
 
-where headi = Attention(QWiQ, KWiK, VWiV)
+where headi = Attention(QW<sub>i</sub><sup>Q</sup>, KW<sub>i</sub><sup>k</sup>, VW<sub>i</sub><sup>V</sup>)
 
 The projections are learned parameter matrices.
 
@@ -142,7 +142,7 @@ Self attention was used with 3 considerations in mind:
 
 Each layer in the encoder and decoder contains such a network, which is applied to each position separately and identically. Its 2 linears transformation with ReLu activation:
 
--   FFN(x) = max(0, xW1 + b1)W2 + b2
+-   FFN(x) = max(0, xW<sub>1</sub> + b<sub>1</sub>)W<sub>2</sub> + b<sub>2</sub>
 
 ### Embeddings
 
