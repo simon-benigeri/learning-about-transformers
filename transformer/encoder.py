@@ -21,7 +21,7 @@ class EncoderLayer(nn.Module):
 		self.feedforward = PositionwiseFeedForward(d_model=d_model, d_ff=d_ff, dropout=dropout)
 		self.d_model = d_model
 
-	def forward(self, x, self_attention_mask):
+	def forward(self, x: Tensor, self_attention_mask: Tensor=None) -> (Tensor, Tensor):
 		x, self_attention_filter = self.self_attention(query=x, key=x, value=x, mask=self_attention_mask)
 		x = self.feedforward(x)
 		return x, self_attention_filter
@@ -37,6 +37,9 @@ class Encoder(nn.Module):
 		self.layers = clones(layer, N)
 		self.layer_norm = nn.LayerNorm(normalized_shape=layer.d_model, eps=1e-6)
 
-	def forward(self):
-		pass
+	def forward(self, x:Tensor, mask: Tensor=None):
+		attention_filter = None
+		for layer in self.layers:
+			x, attention_filter = layer(x, mask)
+		return x, attention_filter
 
