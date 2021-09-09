@@ -9,13 +9,14 @@ from sublayers import MultiHeadAttention, PositionwiseFeedForward
 
 class DecoderLayer(nn.Module):
 	def __init__(
-			self,
-			n_heads: int,
-			d_model: int,
-			# d_k: int,
-			# d_v: int,
-			d_ff: int,
-			dropout: float=0.1):
+		self,
+		n_heads: int,
+		d_model: int,
+		# d_k: int,
+		# d_v: int,
+		d_ff: int,
+		dropout: float=0.1
+	):
 		super().__init__()
 		self.self_attention = MultiHeadAttention(n_heads=n_heads, d_model=d_model, dropout=dropout)
 		self.encoder_self_attention = MultiHeadAttention(n_heads=n_heads, d_model=d_model, dropout=dropout)
@@ -31,9 +32,9 @@ class DecoderLayer(nn.Module):
 
 class Decoder(nn.Module):
 	def __init__(
-			self,
-			N: int,
-			layer: DecoderLayer
+		self,
+		N: int,
+		layer: DecoderLayer
 	):
 		super().__init__()
 		self.layers = clones(layer, N)

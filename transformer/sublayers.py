@@ -10,9 +10,9 @@ from torch import Tensor
 
 class ScaledDotProductAttention(nn.Module):
     def __init__(
-            self,
-            scaling_factor: float,
-            dropout: nn.Module=None
+        self,
+        scaling_factor: float,
+        dropout: nn.Module=None
     ):
         """Compute Scaled Dot Product Attention"""
         super().__init__()
@@ -20,11 +20,11 @@ class ScaledDotProductAttention(nn.Module):
         self.dropout = dropout
 
     def forward(
-            self,
-            query: Tensor,
-            key: Tensor,
-            value: Tensor,
-            mask: Tensor=None
+        self,
+        query: Tensor,
+        key: Tensor,
+        value: Tensor,
+        mask: Tensor=None
     ) -> (Tensor, Tensor):
 
         # QK.T/temperature. typically, temperature = sqrt(d_k )
@@ -47,12 +47,12 @@ class ScaledDotProductAttention(nn.Module):
 
 class MultiHeadAttention(nn.Module):
     def __init__(
-            self,
-            n_heads: int,
-            d_model: int,
-            # d_k: int,
-            # d_v: int,
-            dropout=0.1
+        self,
+        n_heads: int,
+        d_model: int,
+        # d_k: int,
+        # d_v: int,
+        dropout=0.1
     ):
         """input the model size and number of heads"""
         super().__init__()
@@ -76,11 +76,11 @@ class MultiHeadAttention(nn.Module):
         self.attention = ScaledDotProductAttention(scaling_factor=math.sqrt(self.d_k), dropout=self.dropout)
 
     def forward(
-            self,
-            query: Tensor,
-            key: Tensor,
-            value: Tensor,
-            mask: Tensor=None
+        self,
+        query: Tensor,
+        key: Tensor,
+        value: Tensor,
+        mask: Tensor=None
     ) -> (Tensor, Tensor):
 
         assert query.size(1) == self.d_model

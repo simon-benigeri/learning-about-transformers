@@ -8,13 +8,14 @@ from sublayers import MultiHeadAttention, PositionwiseFeedForward
 
 class EncoderLayer(nn.Module):
 	def __init__(
-			self,
-			n_heads: int,
-			d_model: int,
-			# d_k: int,
-			# d_v: int,
-			d_ff: int,
-			dropout: float=0.1):
+		self,
+		n_heads: int,
+		d_model: int,
+		# d_k: int,
+		# d_v: int,
+		d_ff: int,
+		dropout: float=0.1
+	):
 		super().__init__()
 		self.self_attention = MultiHeadAttention(n_heads=n_heads, d_model=d_model, dropout=dropout)
 		self.feedforward = PositionwiseFeedForward(d_model=d_model, d_ff=d_ff, dropout=dropout)
@@ -28,9 +29,9 @@ class EncoderLayer(nn.Module):
 
 class Encoder(nn.Module):
 	def __init__(
-			self,
-			N: int,
-			layer: EncoderLayer
+		self,
+		N: int,
+		layer: EncoderLayer
 	):
 		super().__init__()
 		self.layers = clones(layer, N)
