@@ -5,6 +5,7 @@ import math
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+
 from torch import Tensor
 
 class ScaledDotProductAttention(nn.Module):
@@ -56,7 +57,7 @@ class MultiHeadAttention(nn.Module):
         """input the model size and number of heads"""
         super().__init__()
         assert d_model % n_heads == 0
-        self.num_attention_heads = n_heads
+        self.n_heads = n_heads
         self.d_model = d_model
 
         # TODO: d_k and d_v as arguments
@@ -64,13 +65,13 @@ class MultiHeadAttention(nn.Module):
         self.d_k = d_model // n_heads
         self.d_v = d_model // n_heads
 
-        self.linear_q = nn.Linear(self.d_model, self.num_attention_heads * self.d_k)
-        self.linear_k = nn.Linear(self.d_model, self.num_attention_heads * self.d_k)
-        self.linear_v = nn.Linear(self.d_model, self.num_attention_heads * self.d_v)
-        self.linear_o = nn.Linear(self.num_attention_heads * self.d_v, self.d_model)
+        self.linear_q = nn.Linear(self.d_model, self.n_heads * self.d_k)
+        self.linear_k = nn.Linear(self.d_model, self.n_heads * self.d_k)
+        self.linear_v = nn.Linear(self.d_model, self.n_heads * self.d_v)
+        self.linear_o = nn.Linear(self.n_heads * self.d_v, self.d_model)
 
         self.dropout = nn.Dropout(p=dropout)
-        # self.layer_norm = nn.LayerNorm(normalized_shape=self.d_model, eps=1e-6)
+        self.layer_norm = nn.LayerNorm(normalized_shape=self.d_model, eps=1e-6)
 
         self.attention = ScaledDotProductAttention(scaling_factor=math.sqrt(self.d_k), dropout=self.dropout)
 
@@ -80,22 +81,22 @@ class MultiHeadAttention(nn.Module):
             key: Tensor,
             value: Tensor,
             mask: Tensor=None
-    ) -> Tensor:
+    ) -> (Tensor, Tensor):
 
         assert query.size(1) == self.d_model
         assert key.size(1) == self.d_model
         assert value.size(1) == self.d_model
 
         n_batches = query.size(0)
-        # residual = query
+        residual = query
         # we apply same mask to all heads
         if mask is not None:
             mask = mask.unsqueeze(1)
         # pass query, key, value through the pre-attention linear projection layers and separate  attention heads
         # (n_batches, d_model, d_model) = (n_batches, d_model, (n_heads * d_k)) -> (n_batches, d_model, heads, d_k)
-        query = self.linear_q(query).view(n_batches, -1, self.num_attention_heads, self.d_k)
-        key = self.linear_k(key).view(n_batches, -1, self.num_attention_heads, self.d_k)
-        value = self.linear_v(value).view(n_batches, -1, self.num_attention_heads, self.d_v)
+        query = self.linear_q(query).view(n_batches, -1, self.n_heads, self.d_k)
+        key = self.linear_k(key).view(n_batches, -1, self.n_heads, self.d_k)
+        value = self.linear_v(value).view(n_batches, -1, self.n_heads, self.d_v)
 
         # transpose for scaled dot product attention:
         # (n_batches, d_model, n_heads, d_k) -> (n_batches, n_heads, d_model, d_k)
@@ -106,14 +107,14 @@ class MultiHeadAttention(nn.Module):
 
         # concatenate attention value outputs
         # size: (n_batches, n_heads, d_model, d_k) -> (n_batches, d_model, n_heads * d_k)
-        x = x.transpose(1, 2).contiguous().view(n_batches, self.d_model, self.num_attention_heads * self.d_k)
+        x = x.transpose(1, 2).contiguous().view(n_batches, self.d_model, self.n_heads * self.d_k)
 
         # residual connection and LayerNorm
-        # x += residual
-        # x = self.layer_norm(x)
+        x += residual
+        x = self.layer_norm(x)
 
         # apply final output layer. output shape: (n_batches, d_model, d_k)
-        return self.linear_o(x)
+        return self.linear_o(x), attention_filter
 
 
 class PositionwiseFeedForward(nn.Module):
