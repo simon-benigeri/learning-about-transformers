@@ -17,7 +17,7 @@ class Embeddings(nn.Module):
 
 class PositionalEncoding(nn.Module):
     """Implement positional encoding function"""
-    def __init__(self, d_model, dropout, max_len=5000):
+    def __init__(self, d_model: int, dropout: float=0.1, max_len: int=5000):
         super().__init__()
         self.dropout = nn.Dropout(p=dropout)
         # PEs are not model parameters -> register them as a buffer to module's 'state_dict'
@@ -27,9 +27,11 @@ class PositionalEncoding(nn.Module):
         """Compute the sinusoid positional encodings"""
         encodings = torch.zeros(max_len, d_model)
         positions = torch.arange(0, max_len).unsqueeze(1)
+
         division_term = torch.pow(10000.0, -1 * torch.arange(0, d_model, 2) / d_model)
         encodings[:, 0::2] = torch.sin(positions * division_term)
         encodings[:, 1::2] = torch.cos(positions * division_term)
+
         return encodings.unsqueeze(0)
 
     def forward(self, x: Tensor) -> Tensor:
