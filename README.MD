@@ -132,4 +132,4 @@ Positional encodings are introduced. The goal is to use a mapping that maintains
 
 ### Conclusion
 
-They trained this on a lot of data, with a lot of resources, and it worked well. By replacing the recurrent layers of previous encoder-decoder architectures with multi-head attention, we have a Transformer architecture which can be trained more efficiently and that is better at capturing long range dependencies.
+They trained this on a lot of data, with a lot of resources, and it worked well. By replacing the recurrent layers of previous encoder-decoder architectures with multi-head attention, we have a Transformer architecture which can be trained more efficiently and that is better at capturing long range dependencies. 
