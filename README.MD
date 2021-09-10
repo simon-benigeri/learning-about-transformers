@@ -1,7 +1,7 @@
 # Project Description:
 
 Transformer based architectures are increasingly common in my projects. 
-In this repo I implement a transformer architecture.  
+In this repo I implement a transformer architecture. It's not reinventing the wheel. It's more like re-writing and taking notes.   
 **STATUS:**  
 Code - in progress  
 ReadME - in progress
