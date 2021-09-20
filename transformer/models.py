@@ -37,4 +37,3 @@ class PositionalEncoding(nn.Module):
     def forward(self, x: Tensor) -> Tensor:
         x = x + self.positional_encodings[:, :x.size(1)].detach().clone()
         return self.dropout(x)
-
